@@ -15,7 +15,7 @@ describe("MainLayout", () => {
     expect(screen.getByText("Document Review Assistant")).toBeInTheDocument();
   });
 
-  it("renders navigation links", () => {
+  it("renders all navigation links", () => {
     render(
       <MemoryRouter>
         <MainLayout />
@@ -24,6 +24,8 @@ describe("MainLayout", () => {
 
     expect(screen.getByText("Dashboard")).toBeInTheDocument();
     expect(screen.getByText("Upload")).toBeInTheDocument();
+    expect(screen.getByText("Comparison")).toBeInTheDocument();
+    expect(screen.getByText("Templates")).toBeInTheDocument();
     expect(screen.getByText("Settings")).toBeInTheDocument();
   });
 });

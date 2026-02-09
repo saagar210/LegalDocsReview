@@ -12,6 +12,10 @@ use db::Database;
 
 use commands::document_commands::*;
 use commands::settings_commands::*;
+use commands::analysis_commands::*;
+use commands::comparison_commands::*;
+use commands::template_commands::*;
+use commands::report_commands::*;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -27,7 +31,6 @@ pub fn run() {
                 )?;
             }
 
-            // Initialize database in app data directory
             let app_data = app.handle().path().app_data_dir()
                 .expect("failed to get app data dir");
             std::fs::create_dir_all(&app_data)
@@ -42,16 +45,34 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            // Documents
             upload_document,
             extract_document_text,
             get_document,
             list_documents,
             delete_document,
             get_document_stats,
+            // Settings
             get_setting,
             set_setting,
             get_all_settings,
             delete_setting,
+            // Analysis
+            analyze_document,
+            get_extractions,
+            get_risk_assessments,
+            get_risk_distribution,
+            // Comparison
+            compare_documents,
+            get_comparisons,
+            // Templates
+            create_template,
+            list_templates,
+            get_template,
+            delete_template,
+            // Reports
+            generate_report,
+            get_reports,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

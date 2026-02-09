@@ -5,11 +5,15 @@ import {
   FileText,
   Settings,
   Scale,
+  GitCompareArrows,
+  FileCheck,
 } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/upload", label: "Upload", icon: Upload },
+  { to: "/compare", label: "Comparison", icon: GitCompareArrows },
+  { to: "/templates", label: "Templates", icon: FileCheck },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
