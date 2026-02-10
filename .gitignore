@@ -4,5 +4,6 @@ target/
 *.db
 *.db-journal
 *.db-wal
+*.tsbuildinfo
 .env
 .DS_Store
