@@ -23,6 +23,8 @@ export function useDocuments() {
       setDocuments(docs);
       setStats(docStats);
     } catch (err) {
+      setDocuments([]);
+      setStats(null);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
@@ -31,8 +33,15 @@ export function useDocuments() {
 
   const removeDocument = useCallback(
     async (id: string) => {
-      await deleteDocCmd(id);
-      await refresh();
+      setError(null);
+      try {
+        await deleteDocCmd(id);
+        await refresh();
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        setError(message);
+        throw err;
+      }
     },
     [refresh],
   );
