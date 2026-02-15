@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "clean": "sh ./scripts/clean-workspace.sh",
+    "clean:deep": "sh ./scripts/clean-workspace.sh --with-deps",
+    "clean:dry-run": "sh ./scripts/clean-workspace.sh --dry-run"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0",

@@ -62,6 +62,24 @@ Tests:
 pnpm test
 ```
 
+Workspace cleanup:
+
+```sh
+pnpm clean
+```
+
+Deep cleanup (also removes `node_modules`):
+
+```sh
+pnpm clean:deep
+```
+
+Preview cleanup actions without deleting files:
+
+```sh
+pnpm clean:dry-run
+```
+
 ## API Keys / Local Data
 
 - API keys are entered in the app’s Settings screen and stored locally in the app SQLite DB.
