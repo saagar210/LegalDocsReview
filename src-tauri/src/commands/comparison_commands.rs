@@ -56,33 +56,24 @@ pub async fn compare_documents(
         (text_a, text_b, doc_a.contract_type)
     };
 
-    let contract_type = ContractType::from_str(&contract_type_str)
-        .ok_or_else(|| AppError::Validation(format!("Unknown contract type: {contract_type_str}")))?;
+    let contract_type = contract_type_str
+        .parse::<ContractType>()
+        .map_err(|_| AppError::Validation(format!("Unknown contract type: {contract_type_str}")))?;
 
     let provider = create_provider(&db)?;
     let result = provider.compare_documents(&text_a, &text_b, &contract_type).await?;
 
     let differences_json = serde_json::to_string(&result.differences)
-        .map_err(|e| AppError::Json(e))?;
+        .map_err(AppError::Json)?;
 
     let conn = db.conn.lock().expect("db lock poisoned");
-    comparisons::insert(
-        &conn,
-        &document_a_id,
-        Some(&document_b_id),
-        None,
-        "document_vs_document",
-        &differences_json,
-        Some(&result.summary),
-        Some(provider.name()),
-    )
-}
-
-#[tauri::command]
-pub async fn get_comparisons(
-    db: State<'_, Database>,
-    document_id: String,
-) -> AppResult<Vec<comparisons::Comparison>> {
-    let conn = db.conn.lock().expect("db lock poisoned");
-    comparisons::list_by_document(&conn, &document_id)
+    comparisons::insert(&conn, &comparisons::CreateComparison {
+        document_a_id: &document_a_id,
+        document_b_id: Some(&document_b_id),
+        template_id: None,
+        comparison_type: "document_vs_document",
+        differences: &differences_json,
+        summary: Some(&result.summary),
+        ai_provider: Some(provider.name()),
+    })
 }

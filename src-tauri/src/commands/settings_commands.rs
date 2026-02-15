@@ -22,20 +22,3 @@ pub async fn set_setting(
     let conn = db.conn.lock().expect("db lock poisoned");
     settings::set(&conn, &key, &value)
 }
-
-#[tauri::command]
-pub async fn get_all_settings(
-    db: State<'_, Database>,
-) -> AppResult<Vec<(String, String)>> {
-    let conn = db.conn.lock().expect("db lock poisoned");
-    settings::get_all(&conn)
-}
-
-#[tauri::command]
-pub async fn delete_setting(
-    db: State<'_, Database>,
-    key: String,
-) -> AppResult<()> {
-    let conn = db.conn.lock().expect("db lock poisoned");
-    settings::delete(&conn, &key)
-}

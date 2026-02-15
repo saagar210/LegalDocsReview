@@ -24,7 +24,7 @@ pub fn insert(conn: &Connection, name: &str, contract_type: &str, description: O
     get_by_id(conn, &id)
 }
 
-pub fn get_by_id(conn: &Connection, id: &str) -> AppResult<Template> {
+fn get_by_id(conn: &Connection, id: &str) -> AppResult<Template> {
     conn.query_row(
         "SELECT id, name, contract_type, description, raw_text, extracted_data, created_at, updated_at
          FROM templates WHERE id = ?1",

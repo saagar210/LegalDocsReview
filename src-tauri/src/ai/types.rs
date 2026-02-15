@@ -8,24 +8,20 @@ pub enum ContractType {
     Lease,
 }
 
-impl ContractType {
-    pub fn from_str(s: &str) -> Option<Self> {
+impl std::str::FromStr for ContractType {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "nda" => Some(Self::Nda),
-            "service_agreement" => Some(Self::ServiceAgreement),
-            "lease" => Some(Self::Lease),
-            _ => None,
+            "nda" => Ok(Self::Nda),
+            "service_agreement" => Ok(Self::ServiceAgreement),
+            "lease" => Ok(Self::Lease),
+            _ => Err(()),
         }
     }
+}
 
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Nda => "nda",
-            Self::ServiceAgreement => "service_agreement",
-            Self::Lease => "lease",
-        }
-    }
-
+impl ContractType {
     pub fn display_name(&self) -> &'static str {
         match self {
             Self::Nda => "Non-Disclosure Agreement",

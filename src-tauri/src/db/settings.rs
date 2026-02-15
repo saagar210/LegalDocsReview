@@ -23,19 +23,6 @@ pub fn set(conn: &Connection, key: &str, value: &str) -> AppResult<()> {
     Ok(())
 }
 
-pub fn get_all(conn: &Connection) -> AppResult<Vec<(String, String)>> {
-    let mut stmt = conn.prepare("SELECT key, value FROM settings ORDER BY key")?;
-    let results = stmt
-        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)))?
-        .collect::<Result<Vec<_>, _>>()?;
-    Ok(results)
-}
-
-pub fn delete(conn: &Connection, key: &str) -> AppResult<()> {
-    conn.execute("DELETE FROM settings WHERE key = ?1", params![key])?;
-    Ok(())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -52,24 +39,5 @@ mod tests {
 
         set(&conn, "ai_provider", "claude").unwrap();
         assert_eq!(get(&conn, "ai_provider").unwrap(), Some("claude".into()));
-    }
-
-    #[test]
-    fn test_get_all() {
-        let db = Database::in_memory().unwrap();
-        let conn = db.conn.lock().unwrap();
-        set(&conn, "key1", "val1").unwrap();
-        set(&conn, "key2", "val2").unwrap();
-        let all = get_all(&conn).unwrap();
-        assert_eq!(all.len(), 2);
-    }
-
-    #[test]
-    fn test_delete() {
-        let db = Database::in_memory().unwrap();
-        let conn = db.conn.lock().unwrap();
-        set(&conn, "key1", "val1").unwrap();
-        delete(&conn, "key1").unwrap();
-        assert_eq!(get(&conn, "key1").unwrap(), None);
     }
 }

@@ -1,10 +1,9 @@
-pub mod error;
-pub mod db;
-pub mod ai;
-pub mod documents;
-pub mod analysis;
-pub mod reports;
-pub mod commands;
+mod error;
+mod db;
+mod ai;
+mod documents;
+mod analysis;
+mod commands;
 
 use tauri::Manager;
 
@@ -21,7 +20,6 @@ use commands::report_commands::*;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_fs::init())
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
@@ -55,20 +53,15 @@ pub fn run() {
             // Settings
             get_setting,
             set_setting,
-            get_all_settings,
-            delete_setting,
             // Analysis
             analyze_document,
             get_extractions,
             get_risk_assessments,
-            get_risk_distribution,
             // Comparison
             compare_documents,
-            get_comparisons,
             // Templates
             create_template,
             list_templates,
-            get_template,
             delete_template,
             // Reports
             generate_report,

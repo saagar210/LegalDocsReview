@@ -1,4 +1,4 @@
-pub mod pdf;
+pub(crate) mod pdf;
 
 use sha2::{Digest, Sha256};
 use std::path::Path;

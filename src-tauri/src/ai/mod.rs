@@ -1,12 +1,12 @@
-pub mod provider;
-pub mod types;
-pub mod prompts;
-pub mod ollama;
-pub mod claude;
-pub mod openai;
+mod provider;
+mod types;
+pub(crate) mod prompts;
+mod ollama;
+mod claude;
+mod openai;
 
-pub use provider::AiProvider;
-pub use types::*;
-pub use ollama::OllamaProvider;
-pub use claude::ClaudeProvider;
-pub use openai::OpenAiProvider;
+pub(crate) use provider::AiProvider;
+pub(crate) use types::*;
+pub(crate) use ollama::OllamaProvider;
+pub(crate) use claude::ClaudeProvider;
+pub(crate) use openai::OpenAiProvider;

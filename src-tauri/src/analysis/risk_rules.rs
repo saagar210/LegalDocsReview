@@ -1,4 +1,4 @@
-use crate::ai::types::{ContractType, ExtractionResponse, RiskFlag};
+use crate::ai::{ContractType, ExtractionResponse, RiskFlag};
 
 pub fn apply_rules(extraction: &ExtractionResponse, contract_type: &ContractType) -> Vec<RiskFlag> {
     let mut flags = Vec::new();
@@ -169,7 +169,7 @@ fn apply_lease_rules(extraction: &ExtractionResponse, flags: &mut Vec<RiskFlag>)
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ai::types::ExtractedClause;
+    use crate::ai::ExtractedClause;
 
     fn make_extraction(clauses: Vec<&str>) -> ExtractionResponse {
         ExtractionResponse {

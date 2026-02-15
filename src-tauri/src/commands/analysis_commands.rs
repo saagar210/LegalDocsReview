@@ -78,14 +78,6 @@ pub async fn get_risk_assessments(
     risk_assessments::get_by_document(&conn, &document_id)
 }
 
-#[tauri::command]
-pub async fn get_risk_distribution(
-    db: State<'_, Database>,
-) -> AppResult<risk_assessments::RiskDistribution> {
-    let conn = db.conn.lock().expect("db lock poisoned");
-    risk_assessments::get_risk_distribution(&conn)
-}
-
 #[derive(serde::Serialize)]
 pub struct AnalysisResult {
     pub extraction_id: String,

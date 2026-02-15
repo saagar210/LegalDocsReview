@@ -1,4 +1,4 @@
-pub mod risk_rules;
+mod risk_rules;
 
 use std::sync::Arc;
 use std::time::Instant;
@@ -21,8 +21,9 @@ pub async fn run_extraction(
         (text, doc.contract_type)
     };
 
-    let contract_type = ContractType::from_str(&contract_type_str)
-        .ok_or_else(|| AppError::Validation(format!("Unknown contract type: {contract_type_str}")))?;
+    let contract_type = contract_type_str
+        .parse::<ContractType>()
+        .map_err(|_| AppError::Validation(format!("Unknown contract type: {contract_type_str}")))?;
 
     // Update status to analyzing
     {
@@ -45,7 +46,7 @@ pub async fn run_extraction(
                     ai_model: None,
                     contract_type: contract_type_str,
                     extracted_data: serde_json::to_string(&result)
-                        .map_err(|e| AppError::Json(e))?,
+                        .map_err(AppError::Json)?,
                     confidence_score: None,
                     processing_time_ms: Some(elapsed_ms),
                 },
@@ -73,8 +74,9 @@ pub async fn run_risk_assessment(
         (ext.extracted_data, ext.contract_type)
     };
 
-    let contract_type = ContractType::from_str(&contract_type_str)
-        .ok_or_else(|| AppError::Validation(format!("Unknown contract type: {contract_type_str}")))?;
+    let contract_type = contract_type_str
+        .parse::<ContractType>()
+        .map_err(|_| AppError::Validation(format!("Unknown contract type: {contract_type_str}")))?;
 
     let extraction: ExtractionResponse = serde_json::from_str(&extraction_data)
         .map_err(|e| AppError::AiProvider(format!("Failed to parse stored extraction: {e}")))?;
@@ -100,7 +102,7 @@ pub async fn run_risk_assessment(
             overall_score: risk_result.overall_score,
             risk_level: risk_result.risk_level.clone(),
             flags: serde_json::to_string(&risk_result.flags)
-                .map_err(|e| AppError::Json(e))?,
+                .map_err(AppError::Json)?,
             summary: Some(risk_result.summary),
             ai_provider: provider.name().to_string(),
         },

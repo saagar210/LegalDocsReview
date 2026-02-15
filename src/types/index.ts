@@ -52,14 +52,6 @@ export interface ExtractedClause {
   importance: "high" | "medium" | "low";
 }
 
-export interface ExtractionData {
-  parties: string[];
-  effective_date: string | null;
-  termination_date: string | null;
-  clauses: ExtractedClause[];
-  contract_type: string;
-}
-
 export interface RiskAssessment {
   id: string;
   document_id: string;
@@ -80,22 +72,10 @@ export interface RiskFlag {
   suggestion: string | null;
 }
 
-export interface RiskDistribution {
-  low: number;
-  medium: number;
-  high: number;
-}
-
 export const CONTRACT_TYPE_LABELS: Record<ContractType, string> = {
   nda: "Non-Disclosure Agreement",
   service_agreement: "Service Agreement",
   lease: "Lease Agreement",
-};
-
-export const RISK_LEVEL_COLORS: Record<RiskLevel, string> = {
-  low: "text-risk-low",
-  medium: "text-risk-medium",
-  high: "text-risk-high",
 };
 
 export const RISK_LEVEL_BG: Record<RiskLevel, string> = {

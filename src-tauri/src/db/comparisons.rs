@@ -16,26 +16,36 @@ pub struct Comparison {
     pub created_at: String,
 }
 
-pub fn insert(
-    conn: &Connection,
-    document_a_id: &str,
-    document_b_id: Option<&str>,
-    template_id: Option<&str>,
-    comparison_type: &str,
-    differences: &str,
-    summary: Option<&str>,
-    ai_provider: Option<&str>,
-) -> AppResult<Comparison> {
+pub struct CreateComparison<'a> {
+    pub document_a_id: &'a str,
+    pub document_b_id: Option<&'a str>,
+    pub template_id: Option<&'a str>,
+    pub comparison_type: &'a str,
+    pub differences: &'a str,
+    pub summary: Option<&'a str>,
+    pub ai_provider: Option<&'a str>,
+}
+
+pub fn insert(conn: &Connection, comparison: &CreateComparison<'_>) -> AppResult<Comparison> {
     let id = uuid::Uuid::new_v4().to_string();
     conn.execute(
         "INSERT INTO comparisons (id, document_a_id, document_b_id, template_id, comparison_type, differences, summary, ai_provider)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
-        params![id, document_a_id, document_b_id, template_id, comparison_type, differences, summary, ai_provider],
+        params![
+            id,
+            comparison.document_a_id,
+            comparison.document_b_id,
+            comparison.template_id,
+            comparison.comparison_type,
+            comparison.differences,
+            comparison.summary,
+            comparison.ai_provider
+        ],
     )?;
     get_by_id(conn, &id)
 }
 
-pub fn get_by_id(conn: &Connection, id: &str) -> AppResult<Comparison> {
+fn get_by_id(conn: &Connection, id: &str) -> AppResult<Comparison> {
     conn.query_row(
         "SELECT id, document_a_id, document_b_id, template_id, comparison_type, differences, summary, ai_provider, created_at
          FROM comparisons WHERE id = ?1",
@@ -58,27 +68,4 @@ pub fn get_by_id(conn: &Connection, id: &str) -> AppResult<Comparison> {
         rusqlite::Error::QueryReturnedNoRows => AppError::NotFound(format!("Comparison {id} not found")),
         other => AppError::Database(other),
     })
-}
-
-pub fn list_by_document(conn: &Connection, document_id: &str) -> AppResult<Vec<Comparison>> {
-    let mut stmt = conn.prepare(
-        "SELECT id, document_a_id, document_b_id, template_id, comparison_type, differences, summary, ai_provider, created_at
-         FROM comparisons WHERE document_a_id = ?1 OR document_b_id = ?1 ORDER BY created_at DESC",
-    )?;
-    let results = stmt
-        .query_map(params![document_id], |row| {
-            Ok(Comparison {
-                id: row.get(0)?,
-                document_a_id: row.get(1)?,
-                document_b_id: row.get(2)?,
-                template_id: row.get(3)?,
-                comparison_type: row.get(4)?,
-                differences: row.get(5)?,
-                summary: row.get(6)?,
-                ai_provider: row.get(7)?,
-                created_at: row.get(8)?,
-            })
-        })?
-        .collect::<Result<Vec<_>, _>>()?;
-    Ok(results)
 }

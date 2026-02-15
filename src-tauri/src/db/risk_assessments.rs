@@ -83,23 +83,3 @@ pub fn get_by_document(conn: &Connection, document_id: &str) -> AppResult<Vec<Ri
         .collect::<Result<Vec<_>, _>>()?;
     Ok(results)
 }
-
-pub fn get_risk_distribution(conn: &Connection) -> AppResult<RiskDistribution> {
-    let low: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM risk_assessments WHERE risk_level = 'low'", [], |row| row.get(0),
-    )?;
-    let medium: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM risk_assessments WHERE risk_level = 'medium'", [], |row| row.get(0),
-    )?;
-    let high: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM risk_assessments WHERE risk_level = 'high'", [], |row| row.get(0),
-    )?;
-    Ok(RiskDistribution { low, medium, high })
-}
-
-#[derive(Debug, Serialize)]
-pub struct RiskDistribution {
-    pub low: i64,
-    pub medium: i64,
-    pub high: i64,
-}

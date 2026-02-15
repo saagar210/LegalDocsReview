@@ -4,7 +4,6 @@ import type {
   DocumentStats,
   Extraction,
   RiskAssessment,
-  RiskDistribution,
 } from "@/types";
 
 // Documents
@@ -46,14 +45,6 @@ export async function setSetting(key: string, value: string): Promise<void> {
   return invoke<void>("set_setting", { key, value });
 }
 
-export async function getAllSettings(): Promise<[string, string][]> {
-  return invoke<[string, string][]>("get_all_settings");
-}
-
-export async function deleteSetting(key: string): Promise<void> {
-  return invoke<void>("delete_setting", { key });
-}
-
 // Analysis
 export interface AnalysisResult {
   extraction_id: string;
@@ -83,10 +74,6 @@ export async function getRiskAssessments(
   return invoke<RiskAssessment[]>("get_risk_assessments", { documentId });
 }
 
-export async function getRiskDistribution(): Promise<RiskDistribution> {
-  return invoke<RiskDistribution>("get_risk_distribution");
-}
-
 // Comparison
 export interface Comparison {
   id: string;
@@ -105,12 +92,6 @@ export async function compareDocuments(
   documentBId: string,
 ): Promise<Comparison> {
   return invoke<Comparison>("compare_documents", { documentAId, documentBId });
-}
-
-export async function getComparisons(
-  documentId: string,
-): Promise<Comparison[]> {
-  return invoke<Comparison[]>("get_comparisons", { documentId });
 }
 
 // Templates
@@ -141,10 +122,6 @@ export async function createTemplate(
 
 export async function listTemplates(): Promise<Template[]> {
   return invoke<Template[]>("list_templates");
-}
-
-export async function getTemplate(templateId: string): Promise<Template> {
-  return invoke<Template>("get_template", { templateId });
 }
 
 export async function deleteTemplate(templateId: string): Promise<void> {

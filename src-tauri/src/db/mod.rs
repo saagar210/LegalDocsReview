@@ -1,11 +1,11 @@
-pub mod migrations;
-pub mod documents;
-pub mod extractions;
-pub mod risk_assessments;
-pub mod templates;
-pub mod comparisons;
-pub mod reports;
-pub mod settings;
+pub(crate) mod migrations;
+pub(crate) mod documents;
+pub(crate) mod extractions;
+pub(crate) mod risk_assessments;
+pub(crate) mod templates;
+pub(crate) mod comparisons;
+pub(crate) mod reports;
+pub(crate) mod settings;
 
 use rusqlite::Connection;
 use std::path::Path;
@@ -28,6 +28,7 @@ impl Database {
         Ok(db)
     }
 
+    #[cfg(test)]
     pub fn in_memory() -> AppResult<Self> {
         let conn = Connection::open_in_memory()?;
         conn.execute_batch("PRAGMA foreign_keys=ON;")?;

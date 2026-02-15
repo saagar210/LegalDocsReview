@@ -23,15 +23,6 @@ pub async fn list_templates(db: State<'_, Database>) -> AppResult<Vec<Template>>
 }
 
 #[tauri::command]
-pub async fn get_template(
-    db: State<'_, Database>,
-    template_id: String,
-) -> AppResult<Template> {
-    let conn = db.conn.lock().expect("db lock poisoned");
-    templates::get_by_id(&conn, &template_id)
-}
-
-#[tauri::command]
 pub async fn delete_template(
     db: State<'_, Database>,
     template_id: String,

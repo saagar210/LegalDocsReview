@@ -1,6 +1,6 @@
-pub mod document_commands;
-pub mod settings_commands;
-pub mod analysis_commands;
-pub mod comparison_commands;
-pub mod template_commands;
-pub mod report_commands;
+pub(crate) mod document_commands;
+pub(crate) mod settings_commands;
+pub(crate) mod analysis_commands;
+pub(crate) mod comparison_commands;
+pub(crate) mod template_commands;
+pub(crate) mod report_commands;
