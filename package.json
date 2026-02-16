@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:lean": "sh ./scripts/dev-lean.sh",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "tauri": "tauri",
     "clean": "sh ./scripts/clean-workspace.sh",
+    "clean:heavy": "sh ./scripts/clean-heavy.sh",
+    "clean:full": "sh ./scripts/clean-full.sh",
     "clean:deep": "sh ./scripts/clean-workspace.sh --with-deps",
     "clean:dry-run": "sh ./scripts/clean-workspace.sh --dry-run"
   },
@@ -25,6 +28,7 @@
     "react-router": "^7.0.0"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.10.0",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.1.0",
     "@types/react": "^19.0.0",
