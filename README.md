@@ -50,6 +50,12 @@ Run the desktop app (Tauri):
 pnpm tauri dev
 ```
 
+Run the desktop app in lean mode (temporary Rust build cache + auto cleanup on exit):
+
+```sh
+pnpm dev:lean
+```
+
 Build:
 
 ```sh
@@ -68,6 +74,18 @@ Workspace cleanup:
 pnpm clean
 ```
 
+Targeted heavy-artifact cleanup (keeps dependencies for faster next startup):
+
+```sh
+pnpm clean:heavy
+```
+
+Full local cleanup for reproducible caches (includes dependencies + local cache folders):
+
+```sh
+pnpm clean:full
+```
+
 Deep cleanup (also removes `node_modules`):
 
 ```sh
@@ -79,6 +97,24 @@ Preview cleanup actions without deleting files:
 ```sh
 pnpm clean:dry-run
 ```
+
+## Dev Modes and Disk Tradeoffs
+
+Normal dev (`pnpm tauri dev`):
+
+- Fastest repeat startup because Rust build artifacts are reused from `src-tauri/target`.
+- Uses more disk over time (Rust target artifacts are typically the largest local growth).
+
+Lean dev (`pnpm dev:lean`):
+
+- Runs the same desktop command, but sets `CARGO_TARGET_DIR` to a temporary folder outside the repo.
+- Automatically deletes temporary build cache and runs targeted heavy cleanup when the app exits.
+- Uses less persistent disk in the repo, but startup is slower because Rust artifacts are rebuilt more often.
+
+Cleanup guidance:
+
+- Use `pnpm clean:heavy` for day-to-day disk control without deleting dependencies.
+- Use `pnpm clean:full` when you want to reclaim maximum local space and are okay with reinstall/rebuild cost.
 
 ## API Keys / Local Data
 
